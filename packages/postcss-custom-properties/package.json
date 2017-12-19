@@ -1,0 +1,25 @@
+{
+  "name": "@shopify/postcss-custom-properties",
+  "version": "1.0.0-alpha.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shopify/slate.git"
+  },
+  "author": "Shopify Inc.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Shopify/slate/issues"
+  },
+  "homepage": "https://github.com/Shopify/slate#readme",
+  "dependencies": {
+    "postcss": "^6.0.14"
+  },
+  "devDependencies": {
+    "jest": "^22.0.3"
+  }
+}

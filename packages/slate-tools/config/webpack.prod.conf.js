@@ -6,6 +6,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
+const customProperties = require('@shopify/postcss-custom-properties');
 const postcssReporter = require('postcss-reporter');
 const stylelint = require('../lib/postcss-stylelint');
 const webpackConfig = require('./webpack.base.conf');
@@ -29,8 +30,12 @@ module.exports = merge(
             fallback: 'style-loader',
             use: [
               {
+                loader: 'slate-css-loader',
+                options: {cssVariables: config.paths.postcss.cssVariables},
+              },
+              {
                 loader: 'css-loader',
-                options: {importLoaders: 2},
+                options: {importLoaders: 0},
               },
               {
                 loader: 'postcss-loader',
