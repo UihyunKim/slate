@@ -16,8 +16,8 @@ function install(rootPath) {
     ? utils.spawn('yarnpkg')
     : utils.spawn('npm install');
 
-  return cmd.finally(() => {
-    process.chdir(prevDir);
+  return cmd.then(() => {
+    return process.chdir(prevDir);
   });
 }
 
