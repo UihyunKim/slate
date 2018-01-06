@@ -1,15 +1,22 @@
 const path = require('path');
+const fs = require('fs');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const autoprefixer = require('autoprefixer');
+const stylelint = require('stylelint');
+const postCssReporter = require('postcss-reporter');
 const webpackConfig = require('./webpack.base.conf');
 const commonExcludes = require('../lib/common-excludes');
 const userWebpackConfig = require('../lib/get-user-webpack-config')('dev');
 const config = require('./index');
 
+const isDevServer = process.argv.find(command => command.includes('start'));
+
 // so that everything is absolute
 webpackConfig.output.publicPath = `${config.domain}:${config.port}/`;
+
+console.log('test');
 
 // add hot-reload related code to entry chunks
 Object.keys(webpackConfig.entry).forEach(name => {
@@ -17,6 +24,24 @@ Object.keys(webpackConfig.entry).forEach(name => {
     path.join(__dirname, '../lib/hot-client.js'),
   ].concat(webpackConfig.entry[name]);
 });
+
+function stylelintLoader() {
+  if (!fs.existsSync(config.paths.stylelint.rc)) {
+    return [];
+  }
+
+  const ignorePath = fs.existsSync(config.paths.stylelint.ignore)
+    ? config.paths.stylelint.ignore
+    : null;
+
+  return [
+    stylelint({
+      configFile: config.paths.stylelint.rc,
+      emitErrors: !isDevServer,
+      ignorePath,
+    }),
+  ];
+}
 
 module.exports = merge(
   webpackConfig,
@@ -32,13 +57,22 @@ module.exports = merge(
             'style-loader',
             {
               loader: 'css-loader',
-              options: {importLoaders: 1},
+              options: {importLoaders: 2, sourceMap: true},
             },
             {
               loader: 'postcss-loader',
-              options: {plugins: [autoprefixer]},
+              options: {
+                sourceMap: true,
+                ident: 'postcss',
+                plugins: loader => [
+                  require('postcss-import')({root: loader.resourcePath}),
+                  ...stylelintLoader(),
+                  autoprefixer(),
+                  postCssReporter({clearReportedMessages: true}),
+                ],
+              },
             },
-            'sass-loader',
+            {loader: 'sass-loader', options: {sourceMap: true}},
           ],
         },
       ],

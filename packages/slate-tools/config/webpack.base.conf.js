@@ -85,24 +85,6 @@ const babelLoader = () => {
   ];
 };
 
-function stylelintLoader() {
-  if (!fs.existsSync(config.paths.stylelint.rc)) {
-    return [];
-  }
-
-  const ignorePath = fs.existsSync(config.paths.stylelint.ignore)
-    ? config.paths.stylelint.ignore
-    : null;
-
-  return [
-    new StyleLintPlugin({
-      configFile: config.paths.stylelint.rc,
-      emitErrors: !isDevServer,
-      ignorePath,
-    }),
-  ];
-}
-
 module.exports = {
   context: paths.src,
 
@@ -178,8 +160,6 @@ module.exports = {
 
   plugins: [
     ...contextReplacementPlugins(),
-
-    ...stylelintLoader(),
 
     new CopyWebpackPlugin([
       {
