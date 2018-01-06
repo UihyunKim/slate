@@ -1,9 +1,22 @@
 {
-  "extends": ["plugin:shopify/esnext", "plugin:shopify/node"],
+  "extends": [
+    "plugin:shopify/core",
+    "plugin:shopify/node",
+    "plugin:shopify/prettier"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 6
+  },
   "env": {
     "jest": true
   },
   "rules": {
-    "no-console": "off"
+    "no-console": "off",
+    "prettier/prettier": [
+      "error",
+      {
+        "trailingComma": "es5"
+      }
+    ]
   }
 }
